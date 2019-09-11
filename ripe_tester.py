@@ -20,7 +20,7 @@ from termcolor import colored
 
 code_ptr = ['ret', 'funcptrstackvar', 'funcptrstackparam', 'funcptrheap',
 'funcptrbss', 'funcptrdata', 'structfuncptrstack', 'structfuncptrheap',
-'structfuncptrdata', 'structfuncptrbss', 'longjmpstackvar', 'longjmpstackparam', 
+'structfuncptrdata', 'structfuncptrbss', 'longjmpstackvar', 'longjmpstackparam',
 'longjmpheap', 'longjmpdata', 'longjmpbss','bof', 'iof', 'leak'];
 
 funcs = ['memcpy', 'strcpy', 'strncpy', 'sprintf', 'snprintf', 'strcat',
@@ -42,7 +42,7 @@ def print_attack(cmdargs, status):
 	params = cmdargs.split('_')[1:]
 	for idx, param in enumerate(params):
 		params[idx] = param[2:]
-	
+
 	result = ''
 	if status == 1:
 		result = color('OK', 'green')
@@ -75,7 +75,7 @@ def is_attack_possible ( attack, tech, loc, ptr, func ):
 		return 0;
 
 	if attack == 'rop' and tech != 'direct':
-		return 0	
+		return 0
 
 	if tech == 'indirect' and ptr == 'longjmpheap' and loc == 'bss':
 		if func != 'memcpy' and func != 'strncpy' and func != 'homebrew':
@@ -102,7 +102,7 @@ parser.add_argument('-r', help='Simulator command', default='spike pk', action='
 parser.add_argument('-o', help='Send output to file (default stdout)', nargs=1)
 args = parser.parse_args()
 
-print args
+print ( args )
 
 if args.t == 'both':
 	techniques = ['direct','indirect'];
@@ -120,7 +120,7 @@ if args.o:
 	sys.stdout = open(args.o[0], 'w')
 
 # rebuild RIPE
-os.system('make > /dev/null 2>&1') 
+os.system('make > /dev/null 2>&1')
 
 print bold_line(width)
 print color('RIPE: The Runtime Intrusion Prevention Evaluator for RISCV', 'white')
@@ -143,14 +143,14 @@ for attack in attacks:
 
 					if is_attack_possible (attack, tech, loc, ptr, func) == 0:
 						total_np += 1
-					
+
 					else:
 						if count_only == 0:
 							os.system(cmdline)
 							time.sleep(0.5)
 						else:
 							os.system('touch out/out.text')
-						
+
 						# Evaluate attack status
 						status = 0
 						log = open('out/out.text','r')
@@ -159,7 +159,7 @@ for attack in attacks:
 						if log.read().find('success') != -1:
 							status = 1
 							total_ok += 1
-						
+
 						log.seek(0)
 
 						if status == 0:
